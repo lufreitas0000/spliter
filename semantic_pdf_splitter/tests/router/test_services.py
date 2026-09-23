@@ -2,6 +2,7 @@ from pathlib import Path
 import pytest
 from semantic_pdf_splitter.router.services.extraction import extract_document_to_markdown
 from semantic_pdf_splitter.router.domain.ports import VisionExtractor, SpatialCompiler, VisionEncoder
+from semantic_pdf_splitter.router.domain.models import MarkdownAST
 from semantic_pdf_splitter.router.domain.services.topology import PdfTopologyAnalyzer
 
 class MockTopologyAnalyzer(PdfTopologyAnalyzer):

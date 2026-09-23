@@ -25,7 +25,7 @@ lint:
 
 ## install: Synchronize dependencies
 install:
-	$(PIP) install -r $(PACKAGE_ROOT)/requirements.txt
+	$(PIP) install -r requirements.txt
 
 ## clean: Remove __pycache__ and build artifacts
 clean:
