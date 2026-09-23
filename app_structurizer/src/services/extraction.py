@@ -40,7 +40,6 @@ def extract_document_to_markdown(
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path.write_text(refined_ast.content, encoding="utf-8")
     
-
     return out_path
 
 def _extract_and_encode_images(document: RawDocument, encoder: VisionEncoder) -> dict[str, str]:
