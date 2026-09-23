@@ -16,6 +16,16 @@ class ConcurrencyManager:
         self.manager = multiprocessing.Manager()
         self.vram_semaphore = self.manager.Semaphore(vram_lock_count)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.shutdown()
+
+    def shutdown(self):
+        """Shuts down the multiprocessing Manager to free resources."""
+        self.manager.shutdown()
+
     def process_pdfs_in_parallel(self, pdf_paths: List[str], process_func: Callable[[str, Any], Any]) -> List[Any]:
         """
         Processes a list of PDF file paths in parallel using a process pool.

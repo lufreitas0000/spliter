@@ -15,14 +15,14 @@ def dummy_process(path: str, semaphore: Any) -> str:
     return f"Processed: {path}"
 
 def test_parallel_execution_returns_results():
-    manager = ConcurrencyManager(max_workers=2, vram_lock_count=1)
-    paths = ["doc1.pdf", "doc2.pdf", "doc3.pdf"]
+    with ConcurrencyManager(max_workers=2, vram_lock_count=1) as manager:
+        paths = ["doc1.pdf", "doc2.pdf", "doc3.pdf"]
 
-    results = manager.process_pdfs_in_parallel(paths, dummy_process)
+        results = manager.process_pdfs_in_parallel(paths, dummy_process)
 
-    assert len(results) == 3
-    for path in paths:
-        assert f"Processed: {path}" in results
+        assert len(results) == 3
+        for path in paths:
+            assert f"Processed: {path}" in results
 
 
 def dummy_process_semaphore(path: str, semaphore: Any) -> dict:
@@ -41,20 +41,20 @@ def dummy_process_semaphore(path: str, semaphore: Any) -> dict:
 
 def test_semaphore_limits_concurrency():
     # Only allow 1 concurrent VRAM access
-    manager = ConcurrencyManager(max_workers=4, vram_lock_count=1)
-    paths = ["doc1.pdf", "doc2.pdf", "doc3.pdf", "doc4.pdf"]
+    with ConcurrencyManager(max_workers=4, vram_lock_count=1) as manager:
+        paths = ["doc1.pdf", "doc2.pdf", "doc3.pdf", "doc4.pdf"]
 
-    # Run in parallel. If semaphore works, some might not acquire it immediately if we use non-blocking.
-    # Actually, a better test is to measure time, but that can be flaky.
-    # We'll use the non-blocking acquire to see if they overlap.
-    # With 4 workers and 1 lock, they should all try to acquire almost simultaneously.
-    # At least one should fail to acquire if they are truly concurrent.
+        # Run in parallel. If semaphore works, some might not acquire it immediately if we use non-blocking.
+        # Actually, a better test is to measure time, but that can be flaky.
+        # We'll use the non-blocking acquire to see if they overlap.
+        # With 4 workers and 1 lock, they should all try to acquire almost simultaneously.
+        # At least one should fail to acquire if they are truly concurrent.
 
-    results = manager.process_pdfs_in_parallel(paths, dummy_process_semaphore)
+        results = manager.process_pdfs_in_parallel(paths, dummy_process_semaphore)
 
-    acquired_count = sum(1 for r in results if r["acquired"])
-    # If they ran sequentially, acquired_count would be 4.
-    # Since they run in parallel and hold the lock for 0.5s,
-    # some will fail to acquire the lock since blocking=False.
-    assert acquired_count < 4
-    assert acquired_count >= 1 # At least one should acquire it
+        acquired_count = sum(1 for r in results if r["acquired"])
+        # If they ran sequentially, acquired_count would be 4.
+        # Since they run in parallel and hold the lock for 0.5s,
+        # some will fail to acquire the lock since blocking=False.
+        assert acquired_count < 4
+        assert acquired_count >= 1 # At least one should acquire it
