@@ -13,9 +13,8 @@ The system is a single unified modular monolith `semantic_pdf_splitter`, contain
 * **`vision`:** The semantic vision engine. Invoked only when necessary (e.g., for scanned images or embedded figures), it processes image tensors using Vision-Language Models to generate semantic Markdown or ALT text for injection.
 
 ## 3. Engineering Codex
-* **Bounded Contexts:** Each internal module (`router`, `spatial`, `vision`) must maintain strict boundaries and its own test suite (`pytest`). No cross-module imports are permitted unless mediated by explicit data contracts.
-* **TDD & Immutable Domain:** Adheres strictly to Test-Driven Development (TDD) and SOLID principles, using immutable data classes.
-* **Intermediate Representation:** Markdown is the mandatory data transfer protocol between components.
+* **Bounded Contexts:** Each `app_*` directory must maintain its own `requirements.in` and test suite. No cross-app imports are permitted outside of the orchestrator.
+* **Intermediate Representation:** Markdown is the mandatory data transfer protocol between App 1 and App 2.
 
 ## 4. AI Agent Workflow
 The development of this software is orchestrated using specialized AI agent personas located in the `.agents/` directory:
@@ -27,7 +26,7 @@ The development of this software is orchestrated using specialized AI agent pers
 These agents utilize automated scripts located in the `skills/` directory to run tests and validate code (e.g., `skills/run_tdd_cycle.sh` and `skills/adversarial_check.sh`).
 
 ## 5. CLI Usage & Integrations
-The Semantic PDF Pipeline can be interacted with directly from the Command Line Interface via `cli.py` or the `semantic_pdf_splitter` module.
+The Semantic PDF Pipeline can be interacted with directly from the Command Line Interface via `cli.py`.
 
 ### Basic Usage
 To view available commands:
