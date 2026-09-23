@@ -6,14 +6,39 @@ A microservice-oriented monorepo designed to ingest both tractable (structured) 
 For a detailed phased plan of the implementation, please see the [ROADMAP.md](ROADMAP.md).
 
 ## 2. Architecture (Directed Acyclic Graph)
-The system is decoupled into three core Python applications, ensuring strict separation of concerns between structure routing, spatial extraction, and tensor-based machine learning.
+The system is a single unified modular monolith `semantic_pdf_splitter`, containing internal bounded modules that maintain strict separation of concerns between structure routing, spatial extraction, and tensor-based machine learning.
 
-* **`app_structurizer`:** The topological router and extractor. It analyzes the PDF's internal structure using heuristics (like Shannon Entropy). For digitally structured pages, it extracts native text, equations, and bounding boxes. For raster images, it crops the tensors and delegates them. It serves as the CLI entry point.
-* **`app_spatial_compiler`:** Ingests spatial data and text bounding boxes from structured PDFs. Applies Euclidean heuristics to reconstruct exact Markdown hierarchies (headers, paragraphs, math blocks) natively without ML inference.
-* **`app_vision_encoder`:** The semantic vision engine. Invoked only when necessary (e.g., for scanned images or embedded figures), it processes image tensors using Vision-Language Models to generate semantic Markdown or ALT text for injection.
+* **`router`:** The topological router and extractor. It analyzes the PDF's internal structure using heuristics (like Shannon Entropy). For digitally structured pages, it extracts native text, equations, and bounding boxes. For raster images, it crops the tensors and delegates them. It serves as the CLI entry point.
+* **`spatial`:** Ingests spatial data and text bounding boxes from structured PDFs. Applies Euclidean heuristics to reconstruct exact Markdown hierarchies (headers, paragraphs, math blocks) natively without ML inference.
+* **`vision`:** The semantic vision engine. Invoked only when necessary (e.g., for scanned images or embedded figures), it processes image tensors using Vision-Language Models to generate semantic Markdown or ALT text for injection.
 
 ## 3. Engineering Codex
-* **Bounded Contexts:** Each `app_*` directory must maintain its own `requirements.in` and test suite (`pytest`). No cross-app imports are permitted unless mediated by explicit data contracts.
+* **Bounded Contexts:** Each internal module (`router`, `spatial`, `vision`) must maintain strict boundaries and its own test suite (`pytest`). No cross-module imports are permitted unless mediated by explicit data contracts.
 * **TDD & Immutable Domain:** Adheres strictly to Test-Driven Development (TDD) and SOLID principles, using immutable data classes.
 * **Intermediate Representation:** Markdown is the mandatory data transfer protocol between components.
-EOF
+
+## 4. AI Agent Workflow
+The development of this software is orchestrated using specialized AI agent personas located in the `.agents/` directory:
+- **Orchestrator (`.agents/orchestrator.agent.md`)**: Drives the lifecycle and assigns tasks.
+- **TDD Engineer (`.agents/tdd_engineer.agent.md`)**: Ensures Test-Driven Development is strictly followed.
+- **Adversarial (`.agents/adversarial.agent.md`)**: Focuses on finding vulnerabilities and edge cases.
+- **Deployment (`.agents/deployment.agent.md`)**: Manages deployment and infrastructure.
+
+These agents utilize automated scripts located in the `skills/` directory to run tests and validate code (e.g., `skills/run_tdd_cycle.sh` and `skills/adversarial_check.sh`).
+
+## 5. CLI Usage & Integrations
+The Semantic PDF Pipeline can be interacted with directly from the Command Line Interface via `cli.py` or the `semantic_pdf_splitter` module.
+
+### Basic Usage
+To view available commands:
+```bash
+python cli.py --help
+```
+
+To convert a PDF:
+```bash
+python cli.py convert --help
+```
+
+### Programmatic Integration
+Other software systems (such as external scrapers or automated delivery pipelines) can easily integrate with this repository by invoking the CLI as a subprocess or importing the components directly, relying on the predictable output structured as Markdown ASTs.
