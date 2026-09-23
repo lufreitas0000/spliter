@@ -12,3 +12,10 @@ It needs to parse the raw Markdown string that contains image placeholders (e.g.
 
 ## Why it's safe for parallel work
 This is a pure string-manipulation/AST-traversal algorithm that operates strictly on the final output data format, independent of how the PDFs are parsed. It will not conflict with the orchestrator, process pool manager, or the PyMuPDF native tags extraction tasks.
+# Branch Scope: feature/concurrency-manager
+
+## Task Description
+Build a utility library to manage concurrent execution. Implement `ProcessPoolExecutor` logic that takes a list of PDF file paths and processes them in parallel. Implement the VRAM locking semaphore logic.
+
+## Why it's safe
+This is purely infrastructure logic. It can be developed using dummy functions first, then injected into the Orchestrator later.
