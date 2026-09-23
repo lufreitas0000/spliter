@@ -1,0 +1,10 @@
+# Execution Boundary
+typer
+rich
+
+# Static Analysis & Testing Substrate
+pytest
+mypy
+pip-tools
+pylatexenc
+pdfminer.six
