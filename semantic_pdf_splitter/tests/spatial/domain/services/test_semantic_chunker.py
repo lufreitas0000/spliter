@@ -25,7 +25,7 @@ def test_semantic_chunker_groups_similar_segments():
     ]
 
     provider = MockEmbeddingProvider(embeddings)
-    chunker = SemanticChunker(embedding_provider=provider, similarity_threshold=0.75)
+    chunker = SemanticChunker(embedding_provider=provider, similarity_threshold=0.75, overlap_window_size=0)
 
     segments = [
         TextSegment(text="A", page_number=1, bounding_box=(0,0,10,10)),
@@ -65,7 +65,7 @@ def test_semantic_chunker_handles_zero_vectors():
         [1.0, 1.0, 1.0],
     ]
     provider = MockEmbeddingProvider(embeddings)
-    chunker = SemanticChunker(embedding_provider=provider, similarity_threshold=0.75)
+    chunker = SemanticChunker(embedding_provider=provider, similarity_threshold=0.75, overlap_window_size=0)
 
     segments = [
         TextSegment(text="A", page_number=1, bounding_box=(0,0,10,10)),
@@ -77,3 +77,64 @@ def test_semantic_chunker_handles_zero_vectors():
     assert len(chunks) == 2  # Should split because similarity is 0.0 for zero vectors
     assert len(chunks[0].segments) == 1
     assert len(chunks[1].segments) == 1
+
+def test_sliding_window_overlap():
+    embeddings = [
+        [1.0, 0.0],  # Seg 0
+        [1.0, 0.0],  # Seg 1 (similar to Seg 0)
+        [0.0, 1.0],  # Seg 2 (orthogonal to Seg 1 -> splits)
+        [0.0, 1.0],  # Seg 3 (similar to Seg 2)
+        [0.0, 1.0],  # Seg 4 (similar to Seg 3)
+    ]
+
+    provider = MockEmbeddingProvider(embeddings)
+    chunker = SemanticChunker(embedding_provider=provider, similarity_threshold=0.75, overlap_window_size=1)
+
+    segments = [
+        TextSegment(text="A", page_number=1, bounding_box=(0,0,0,0)),
+        TextSegment(text="B", page_number=1, bounding_box=(0,0,0,0)),
+        TextSegment(text="C", page_number=1, bounding_box=(0,0,0,0)),
+        TextSegment(text="D", page_number=1, bounding_box=(0,0,0,0)),
+        TextSegment(text="E", page_number=1, bounding_box=(0,0,0,0)),
+    ]
+
+    chunks = chunker.chunk_segments(segments)
+
+    assert len(chunks) == 2
+
+    # Chunk 0 should have segments 0, 1 ("A", "B")
+    assert [s.text for s in chunks[0].segments] == ["A", "B"]
+
+    # Chunk 1 should start with overlapping segment 1 ("B"), then 2, 3, 4 ("C", "D", "E")
+    assert [s.text for s in chunks[1].segments] == ["B", "C", "D", "E"]
+
+def test_metadata_aggregation():
+    embeddings = [
+        [1.0, 0.0],
+        [1.0, 0.0],
+    ]
+
+    provider = MockEmbeddingProvider(embeddings)
+    chunker = SemanticChunker(embedding_provider=provider, similarity_threshold=0.75)
+
+    segments = [
+        TextSegment(
+            text="A", page_number=1, bounding_box=(0,0,0,0),
+            metadata={"section_header": "Section A", "contains_tables": True}
+        ),
+        TextSegment(
+            text="B", page_number=1, bounding_box=(0,0,0,0),
+            metadata={"section_header": "Section B", "contains_equations": True}
+        ),
+    ]
+
+    chunks = chunker.chunk_segments(segments)
+    assert len(chunks) == 1
+
+    meta = chunks[0].aggregated_metadata
+    assert "Section A" in meta["section_header"]
+    assert "Section B" in meta["section_header"]
+    assert len(meta["section_header"]) == 2
+
+    assert meta["contains_tables"] is True
+    assert meta["contains_equations"] is True
