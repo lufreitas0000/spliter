@@ -8,6 +8,7 @@ from collections import Counter
 import fitz  # type: ignore
 from app_structurizer.src.domain.models import RawDocument
 
+
 class PdfTopologyAnalyzer:
     """
     Analyzes the discrete text state space of a PDF.

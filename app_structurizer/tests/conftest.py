@@ -6,18 +6,22 @@ from app_structurizer.src.domain.ports import VisionExtractor
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures"
 
+
 class FakeVisionExtractor:
     def extract_ast(self, document: RawDocument) -> MarkdownAST:
         return MarkdownAST(
             content=f"# Simulated Chapter for {document.file_path.name}\n\nMocked extraction.",
-            metadata={"confidence": "0.99", "model": "FakeAdapter_v1"}
+            metadata={"confidence": "0.99", "model": "FakeAdapter_v1"},
         )
+
 
 @pytest.fixture(scope="session")
 def fake_extractor() -> VisionExtractor:
     return FakeVisionExtractor()
 
+
 import filelock
+
 
 @pytest.fixture(scope="session")
 def degraded_raster_book_path() -> Path:
@@ -26,7 +30,8 @@ def degraded_raster_book_path() -> Path:
     lock_path = FIXTURE_DIR / "old_scanned_book.pdf.lock"
 
     with filelock.FileLock(str(lock_path)):
-        if out_path.exists(): return out_path
+        if out_path.exists():
+            return out_path
 
         final_doc = fitz.open()
         temp_doc = fitz.open()
@@ -34,7 +39,9 @@ def degraded_raster_book_path() -> Path:
         for i in range(50):
             temp_page = temp_doc.new_page()
             temp_page.insert_text(fitz.Point(50, 50), f"Chapter {i}", fontsize=24)
-            temp_page.insert_text(fitz.Point(50, 100), "Degraded raster text payload.", fontsize=12)
+            temp_page.insert_text(
+                fitz.Point(50, 100), "Degraded raster text payload.", fontsize=12
+            )
 
             pix = temp_page.get_pixmap(dpi=72)
             img_bytes = pix.tobytes("jpeg", jpg_quality=10)
@@ -47,6 +54,7 @@ def degraded_raster_book_path() -> Path:
         final_doc.close()
         return out_path
 
+
 @pytest.fixture(scope="session")
 def clean_vector_book_path() -> Path:
     """Synthesizes a modern, purely vector-based PDF (no rasters/images)."""
@@ -55,17 +63,26 @@ def clean_vector_book_path() -> Path:
     lock_path = FIXTURE_DIR / "modern_vector_book.pdf.lock"
 
     with filelock.FileLock(str(lock_path)):
-        if out_path.exists(): return out_path
+        if out_path.exists():
+            return out_path
 
         doc = fitz.open()
         for i in range(5):
             page = doc.new_page()
             page.insert_text(fitz.Point(50, 50), f"Modern Chapter {i}", fontsize=20)
-            page.insert_text(fitz.Point(50, 90), "This text exists as pure math vectors.", fontsize=10)
+            page.insert_text(
+                fitz.Point(50, 90),
+                "This text exists as pure math vectors.",
+                fontsize=10,
+            )
         doc.save(str(out_path))
         doc.close()
         return out_path
 
+
 @pytest.fixture
 def raw_document(degraded_raster_book_path: Path) -> RawDocument:
-    return RawDocument(file_path=degraded_raster_book_path, file_size_bytes=degraded_raster_book_path.stat().st_size)
+    return RawDocument(
+        file_path=degraded_raster_book_path,
+        file_size_bytes=degraded_raster_book_path.stat().st_size,
+    )
