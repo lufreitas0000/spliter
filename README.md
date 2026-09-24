@@ -1,3 +1,7 @@
+> [!WARNING]
+> **This project has been migrated and archived.**
+> All development has moved to the unified monorepo: [lufreitas0000/nexus-engine](https://github.com/lufreitas0000/nexus-engine)
+
 # PDF to RAG Markdown Converter
 
 This repository provides an automated pipeline to convert legacy PDF books into digestable markdown chunks optimized for Retrieval-Augmented Generation (RAG) systems.
