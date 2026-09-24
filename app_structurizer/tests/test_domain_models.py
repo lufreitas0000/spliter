@@ -1,6 +1,6 @@
 from pathlib import Path
 import pytest
-from src.domain.models import RawDocument, MarkdownAST
+from app_structurizer.src.domain.models import RawDocument, MarkdownAST
 
 def test_raw_document_initialization_success(tmp_path: Path):
     file_path = tmp_path / "test.pdf"

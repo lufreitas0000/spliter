@@ -4,8 +4,8 @@ Validation suite for the PDF Topology Analyzer via Shannon Entropy.
 
 import math
 from pathlib import Path
-from src.domain.models import RawDocument
-from src.domain.services.topology import PdfTopologyAnalyzer
+from app_structurizer.src.domain.models import RawDocument
+from app_structurizer.src.domain.services.topology import PdfTopologyAnalyzer
 
 def test_analyzer_identifies_pure_raster(degraded_raster_book_path: Path):
     """

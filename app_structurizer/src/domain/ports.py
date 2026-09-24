@@ -4,7 +4,7 @@ Enforces Dependency Inversion for all external computational modules.
 """
 
 from typing import Protocol
-from src.domain.models import RawDocument, MarkdownAST
+from app_structurizer.src.domain.models import RawDocument, MarkdownAST
 
 class SpatialNode:
     """Represents a discrete C-level text node with its spatial bounds."""

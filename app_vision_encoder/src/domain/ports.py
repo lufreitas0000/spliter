@@ -1,5 +1,5 @@
 from typing import Protocol
-from src.domain.models import PhysicalImageReference, SemanticDescription
+from app_vision_encoder.src.domain.models import PhysicalImageReference, SemanticDescription
 
 class VisionEncoderPort(Protocol):
     """

@@ -7,8 +7,8 @@ import pytest
 from pathlib import Path
 from dataclasses import FrozenInstanceError
 
-from src.domain.models import PhysicalImageReference, SemanticDescription
-from src.domain.ports import VisionEncoderPort
+from app_vision_encoder.src.domain.models import PhysicalImageReference, SemanticDescription
+from app_vision_encoder.src.domain.ports import VisionEncoderPort
 
 def test_physical_image_reference_validates_pointer(synthetic_image_tensor: Path) -> None:
     ref = PhysicalImageReference(
@@ -26,7 +26,7 @@ def test_physical_image_reference_rejects_null_manifold(tmp_path: Path) -> None:
 def test_domain_state_immutability(physical_image: PhysicalImageReference) -> None:
     with pytest.raises(FrozenInstanceError):
         # Mypy correctly ignores the assignment natively, so we drop the type: ignore
-        physical_image.file_size_bytes = 9999
+        physical_image.file_size_bytes = 9999  # type: ignore[misc]
 
 def test_fake_encoder_satisfies_protocol(
     fake_encoder: VisionEncoderPort,

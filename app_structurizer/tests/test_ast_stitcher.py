@@ -1,6 +1,6 @@
 import pytest
-from src.domain.models import MarkdownAST
-from src.domain.services.ast_stitcher import AstStitcher
+from app_structurizer.src.domain.models import MarkdownAST
+from app_structurizer.src.domain.services.ast_stitcher import AstStitcher
 
 def test_ast_stitcher_strips_images_preserves_captions():
     # Setup the initial state

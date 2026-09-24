@@ -1,6 +1,6 @@
 from typer.testing import CliRunner
 from pathlib import Path
-from src.cli import app
+from app_structurizer.src.cli import app
 
 runner = CliRunner()
 

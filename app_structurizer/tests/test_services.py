@@ -1,11 +1,11 @@
 from pathlib import Path
 import pytest
-from src.services.extraction import extract_document_to_markdown
-from src.domain.ports import VisionExtractor, SpatialCompiler, VisionEncoder
-from src.domain.services.topology import PdfTopologyAnalyzer
-from src.domain.models import MarkdownAST
+from app_structurizer.src.services.extraction import extract_document_to_markdown
+from app_structurizer.src.domain.ports import VisionExtractor, SpatialCompiler, VisionEncoder
+from app_structurizer.src.domain.services.topology import PdfTopologyAnalyzer
+from app_structurizer.src.domain.models import MarkdownAST
 
-from src.domain.models import MarkdownAST
+from app_structurizer.src.domain.models import MarkdownAST
 
 class MockTopologyAnalyzer(PdfTopologyAnalyzer):
     def __init__(self, q_factor: float):

@@ -1,5 +1,5 @@
 import re
-from src.domain.models import MarkdownAST
+from app_structurizer.src.domain.models import MarkdownAST
 
 class AstStitcher:
     """

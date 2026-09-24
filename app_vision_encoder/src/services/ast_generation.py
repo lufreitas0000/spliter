@@ -1,6 +1,6 @@
 from pathlib import Path
-from src.domain.models import PhysicalImageReference, SemanticDescription
-from src.domain.ports import VisionEncoderPort
+from app_vision_encoder.src.domain.models import PhysicalImageReference, SemanticDescription
+from app_vision_encoder.src.domain.ports import VisionEncoderPort
 
 def generate_semantic_ast_node(image_path: Path, encoder: VisionEncoderPort) -> SemanticDescription:
     """

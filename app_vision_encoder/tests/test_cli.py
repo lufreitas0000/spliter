@@ -4,7 +4,7 @@ Validation suite for the Command Line Interface (CLI) driving adapter.
 
 from typer.testing import CliRunner
 from pathlib import Path
-from src.cli import app
+from app_vision_encoder.src.cli import app
 
 runner = CliRunner()
 

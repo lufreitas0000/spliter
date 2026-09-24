@@ -1,6 +1,6 @@
 from pathlib import Path
 import pytest
-from src.domain.models import PhysicalImageReference, SemanticDescription
+from app_vision_encoder.src.domain.models import PhysicalImageReference, SemanticDescription
 
 def test_physical_image_reference_success(tmp_path: Path):
     file_path = tmp_path / "test_image.png"

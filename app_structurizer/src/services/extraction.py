@@ -1,9 +1,9 @@
 from pathlib import Path
 import fitz  # type: ignore
-from src.domain.models import RawDocument, MarkdownAST
-from src.domain.ports import VisionExtractor, SpatialCompiler, SpatialNode, VisionEncoder
-from src.domain.services.topology import PdfTopologyAnalyzer
-from src.domain.services.ast_stitcher import AstStitcher
+from app_structurizer.src.domain.models import RawDocument, MarkdownAST
+from app_structurizer.src.domain.ports import VisionExtractor, SpatialCompiler, SpatialNode, VisionEncoder
+from app_structurizer.src.domain.services.topology import PdfTopologyAnalyzer
+from app_structurizer.src.domain.services.ast_stitcher import AstStitcher
 
 def extract_document_to_markdown(
     file_path: Path,

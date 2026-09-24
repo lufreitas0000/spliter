@@ -1,6 +1,6 @@
 from typing import Optional
-from src.domain.models import PhysicalImageReference, SemanticDescription
-from src.domain.ports import VisionEncoderPort
+from app_vision_encoder.src.domain.models import PhysicalImageReference, SemanticDescription
+from app_vision_encoder.src.domain.ports import VisionEncoderPort
 
 class GeminiExternalAdapter(VisionEncoderPort):
     """

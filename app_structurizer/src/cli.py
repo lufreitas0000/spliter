@@ -9,12 +9,12 @@ from pathlib import Path
 from rich.console import Console
 from rich.panel import Panel
 
-from src.services.extraction import extract_document_to_markdown
-from src.domain.ports import VisionExtractor, SpatialCompiler, VisionEncoder
-from src.domain.services.topology import PdfTopologyAnalyzer
-from src.domain.models import MarkdownAST
+from app_structurizer.src.services.extraction import extract_document_to_markdown
+from app_structurizer.src.domain.ports import VisionExtractor, SpatialCompiler, VisionEncoder
+from app_structurizer.src.domain.services.topology import PdfTopologyAnalyzer
+from app_structurizer.src.domain.models import MarkdownAST
 
-from src.domain.models import MarkdownAST
+from app_structurizer.src.domain.models import MarkdownAST
 
 app = typer.Typer(help="Semantic PDF Structurizer: Map continuous PDF tensors to discrete Markdown ASTs.")
 console = Console()
@@ -61,14 +61,14 @@ def extract(
     extractor: VisionExtractor
     if use_fake:
         console.print("[yellow]Warning: Using deterministic FakeVisionExtractor. Bypassing PyTorch.[/yellow]")
-        from tests.conftest import FakeVisionExtractor
+        from app_structurizer.tests.conftest import FakeVisionExtractor
         extractor = FakeVisionExtractor()
     else:
         hardware = _get_hardware_info()
         console.print(f"Hardware Probed: {hardware}")
         console.print("[dim]Lazy-loading PyTorch weights into memory...[/dim]")
 
-        from src.adapters.marker_adapter import MarkerVisionAdapter
+        from app_structurizer.src.adapters.marker_adapter import MarkerVisionAdapter
         extractor = MarkerVisionAdapter()
         console.print("[green]ML Adapters Loaded.[/green]")
 

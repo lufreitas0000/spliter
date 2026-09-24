@@ -6,8 +6,8 @@ Maps the pure domain structures to the marker-pdf/PyTorch tensor operations.
 from typing import Any, Dict, Optional
 import time
 
-from src.domain.models import RawDocument, MarkdownAST
-from src.domain.ports import VisionExtractor
+from app_structurizer.src.domain.models import RawDocument, MarkdownAST
+from app_structurizer.src.domain.ports import VisionExtractor
 
 class MarkerVisionAdapter:
     """
